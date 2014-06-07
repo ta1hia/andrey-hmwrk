@@ -29,8 +29,36 @@ class BST:
             else:
                 node.rchild = Node(x)
 
+
     def remove_node(self, x):
-        pass
+        parent = self.find_parent(None, self.root, x)
+        node = self.find_node(self.root, x)
+
+        if not node.lchild and not node.rchild:
+            self.__replace_child(parent, node, None)
+
+        elif not node.lchild and node.rchild:
+            self.__replace_child(parent, node, node.rchild)
+
+        elif node.lchild and not node.rchild:
+            self.__replace_child(parent, node, node.lchild)
+
+        elif node.lchild and node.rchild:
+            lsub_max = self.find_max(node.lchild)
+            self.remove_node(lsub_max.data)
+            lsub_max.rchild = node.rchild
+            lsub_max.lchild = node.lchild
+            self.__replace_child(parent, node, lsub_max)
+
+    def __replace_child(self, parent, orig, new):
+        if parent:
+            if parent.lchild == orig:
+                parent.lchild = new
+            elif parent.rchild == orig:
+                parent.rchild = new
+        else:
+            self.root = new
+
 
     def find_node(self, node, x):
         if node.data == x:
@@ -40,6 +68,7 @@ class BST:
         elif node.data < x:
             return self.find_node(node.rchild, x)
 
+
     def find_parent(self, parent, node, x):
         if node.data == x:
             return parent
@@ -47,6 +76,17 @@ class BST:
             return self.find_parent(node, node.lchild, x)
         elif node.data < x:
             return self.find_parent(node, node.rchild, x)
+
+
+    def find_max(self, node):
+        if node:
+            cur = node
+            if not cur.rchild and cur.lchild:
+                cur = cur.lchild
+            while cur.rchild:
+                cur = cur.rchild
+            return cur
+
 
     def inorder_traversal(self, node):
         if node.lchild:
@@ -89,3 +129,6 @@ print "find node 100? " + str(node.data)
 
 parent = tree.find_parent(None, tree.root, 25)
 print "find parent of 25? " + str(parent.data)
+
+tree.remove_node(40)
+tree.bfs_print()

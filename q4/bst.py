@@ -112,6 +112,35 @@ class BST:
             children = []
 
 
+def bfs(t, x):
+    if t.root:
+        parents = [t.root]
+        children = []
+
+        while parents:
+            for node in parents:
+                if node.data == x:
+                    return node
+                if node.lchild:
+                    children.append(node.lchild)
+                if node.rchild:
+                    children.append(node.rchild)
+
+                parents = children
+                children = []
+
+def dfs(node, x):
+    if node:
+        if node.data == x:
+            return node
+
+        child = dfs(node.lchild, x)
+        if child and child.data == x:
+            return child
+
+        child = dfs(node.rchild, x)
+        if child and child.data == x:
+            return child
 
 
 tree = BST(40)
@@ -122,7 +151,4 @@ tree.insert_node(tree.root, 25)
 tree.insert_node(tree.root, 100)
 tree.insert_node(tree.root, 80)
 
-tree.bfs_print()
-
-tree.remove_node(40)
 tree.bfs_print()
